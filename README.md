@@ -49,3 +49,21 @@ pip install -r requirements.txt
 5. Add tests to verify key behaviors.
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
+
+## Testing PawPal+
+
+To securely run the automated testing suite against the backend algorithm, ensure your terminal is inside the project root and execute the following command:
+
+```bash
+python -m pytest
+```
+
+**Test Suite Coverage:**
+- **Task Addition:** Verifies adding instances accurately maps to the target pet's internal memory array.
+- **Task Completion:** Verifies state transition toggling `IsCompleted` successfully.
+- **Sorting Correctness:** Verifies alphabetical zero-padded string logic orders array items correctly across disjointed inputs.
+- **Recurrence Logic:** Verifies completing "Daily" or "Weekly" items cleanly invokes `timedelta` to clone tasks securely into the future.
+- **Conflict Detection:** Verifies parallel start-time assignments successfully trigger dictionary-backed non-blocking terminal warnings across multiple pet schedules.
+
+**Confidence Level:** ⭐⭐⭐⭐⭐ (5 out of 5 stars)
+The raw output retrieved from pytest verified 5/5 targeted behaviors passed securely. The backend logic reliably honors constraints, executes array integrations, and scales cleanly without causing fatal crashes.
