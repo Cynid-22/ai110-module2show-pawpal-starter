@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
+import datetime
+from datetime import timedelta
 
 @dataclass
 class Pet:
@@ -29,10 +31,28 @@ class Task:
     PriorityLevel: int
     Frequency: str
     TargetPet: Pet
+    Time: str = "00:00"
+    DueDate: Optional[datetime.date] = None
     IsCompleted: bool = False
+
+    def mark_complete(self) -> None:
+        """Alias for mark complete mapped to test scripts."""
+        self.MarkAsComplete()
 
     def MarkAsComplete(self) -> None:
         self.IsCompleted = True
+        self._GenerateRecurring()
+
+    def _GenerateRecurring(self) -> None:
+        BaseDate: datetime.date = self.DueDate if self.DueDate else datetime.date.today()
+        if self.Frequency.lower() == "daily":
+            NextDate = BaseDate + timedelta(days=1)
+            NextTask = Task(self.Description, self.Duration, self.PriorityLevel, self.Frequency, self.TargetPet, self.Time, NextDate)
+            self.TargetPet.AddTask(NextTask)
+        elif self.Frequency.lower() == "weekly":
+            NextDate = BaseDate + timedelta(days=7)
+            NextTask = Task(self.Description, self.Duration, self.PriorityLevel, self.Frequency, self.TargetPet, self.Time, NextDate)
+            self.TargetPet.AddTask(NextTask)
 
     def UpdateDuration(self, NewDuration: int) -> None:
         self.Duration = NewDuration
@@ -82,3 +102,28 @@ class Scheduler:
                 RemainingTime -= TaskItem.Duration
                 
         return self.SelectedPlan
+
+    def SortByTime(self, TasksList: List[Task]) -> List[Task]:
+        # Sort using zfill on strings to ensure standard time ascending formatting (e.g. 09:00 vs 14:00)
+        return sorted(TasksList, key=lambda T: T.Time.zfill(5))
+
+    def FilterTasks(self, IsCompleted: Optional[bool] = None, PetName: Optional[str] = None) -> List[Task]:
+        Filtered: List[Task] = []
+        for T in self.SystemOwner.GetAllTasks():
+            if IsCompleted is not None and T.IsCompleted != IsCompleted:
+                continue
+            if PetName is not None and T.TargetPet.Name != PetName:
+                continue
+            Filtered.append(T)
+        return Filtered
+
+    def DetectConflicts(self) -> List[str]:
+        Warnings: List[str] = []
+        TimeMap = {}
+        for T in self.SystemOwner.GetAllTasks():
+            if not T.IsCompleted:
+                if T.Time in TimeMap:
+                    Warnings.append(f"WARNING: Lightweight Conflict - Both '{T.Description}' and '{TimeMap[T.Time].Description}' occur strictly at {T.Time}.")
+                else:
+                    TimeMap[T.Time] = T
+        return Warnings

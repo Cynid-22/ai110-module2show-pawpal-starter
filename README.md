@@ -22,6 +22,14 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Smarter Scheduling
+
+The core PawPal+ system features advanced algorithmic handling for logistical planning:
+- **Time String Sorting:** The Scheduler logically zeroes and sorts HH:MM strings to guarantee chronological ascending task arrays.
+- **Status/Pet Filtering:** Dynamic array parsing filters allow isolated retrieval of tasks mapped to a specific Pet Name or completion boolean.
+- **Auto-Recurring Generations:** Utilizing `datetime.timedelta`, tasks designated as Daily or Weekly inherently instantiate identical future-dated copies of themselves when flagged as complete.
+- **Lightweight Conflict Logging:** Parses across multi-pet structures via dictionaries to output non-blocking warnings if absolute parallel start-times clash.
+
 ## Getting started
 
 ### Setup

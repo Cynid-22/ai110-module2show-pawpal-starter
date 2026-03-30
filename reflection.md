@@ -34,8 +34,8 @@
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+- **Tradeoff:** The conflict detection algorithm is lightweight and currently only flags a warning if two tasks have the exact same start time (`HH:MM`).
+- **Reasoning:** It intentionally skips mathematically calculating overlapping minutes between variable `Duration` lengths. This is a reasonable tradeoff because PawPal+ acts primarily as a flexible daily checklist assistant for humans, not a rigid server CPU thread scheduler. An owner can logically adapt to minor duration overlaps (e.g., spending 15 minutes grooming the cat while the dog eats its 20-minute breakfast), whereas an exact start-time conflict usually implies an immediate logistical clash requiring a warning.
 
 ---
 
