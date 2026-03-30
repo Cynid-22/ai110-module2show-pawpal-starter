@@ -9,13 +9,19 @@
 
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+- The initial UML design centered heavily around separating the logic into four simple, modular domains: `Pet`, `Owner`, `Task`, and `Scheduler`.
+- Classes included:
+  - `Pet`: Responsibilities include persisting information about the individual pet's characteristics (Name, Species, Age, Special Requirements).
+  - `Owner`: Centralizes the user's available time constraints and acts as the container for their array of pets.
+  - `Task`: A Python Dataclass that holds the duration and status information for a specific, discrete pet care need (e.g. morning walk, feeding).
+  - `Scheduler`: Acts as the app's logical brain. It intakes raw tasks and available times, filtering and structuring out a definitive subset plan that respects user time constraints.
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+- Yes, design changes occurred dynamically during skeleton implementation based on AI analysis.
+- Change 1: Added a `TargetPet` relation inside the `Task` dataclass. Why? A task cannot float in a vacuum; if an owner has multiple pets, a task needs to be hard-linked to the specific pet receiving the care.
+- Change 2: Transitioned `PriorityLevel` from an ambiguous `str` (e.g., "High", "Low") to an explicit `int`. Why? Comparing, sorting, and maximizing `int` values via algorithms natively allows the `Scheduler` to mathematically pack high-priority tasks in limited time gaps faster and safer.
+- Change 3: Bound `Scheduler` to an `Owner` object at initialization. Why? Passing `Owner` dynamically avoids unassociated `AvailableTime` states and grounds the schedule around one specific owner's domain boundaries.
 
 ---
 
