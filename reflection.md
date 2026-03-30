@@ -2,6 +2,11 @@
 
 ## 1. System Design
 
+**Core Actions:**
+1. Enter basic owner and pet information (e.g., add a pet).
+2. Add, edit, and track pet care tasks (e.g., schedule a walk with duration and priority).
+3. Generate and view a daily schedule/plan that fits within constraints and priorities.
+
 **a. Initial design**
 
 - Briefly describe your initial UML design.
