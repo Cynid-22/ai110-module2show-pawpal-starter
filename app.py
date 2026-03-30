@@ -38,13 +38,15 @@ if PrimaryPet:
 st.markdown("### Tasks")
 st.caption("Add a few tasks. These now directly feed into the PawPal+ backend.")
 
-Col1, Col2, Col3 = st.columns(3)
+Col1, Col2, Col3, Col4 = st.columns(4)
 with Col1:
     TaskTitleInput = st.text_input("Task title", value="Morning walk")
 with Col2:
-    TaskDurationInput = st.number_input("Duration (minutes)", min_value=1, max_value=240, value=20)
+    TaskDurationInput = st.number_input("Duration (min)", min_value=1, max_value=240, value=20)
 with Col3:
     TaskPriorityInput = st.selectbox("Priority", ["low", "medium", "high"], index=2)
+with Col4:
+    TaskTimeInput = st.text_input("Time (e.g. 08:30)", value="08:00")
 
 # Priority text to int mapper
 PriorityMap = {"low": 1, "medium": 2, "high": 3}
@@ -55,11 +57,12 @@ if st.button("Add task"):
             Description=TaskTitleInput,
             Duration=int(TaskDurationInput),
             PriorityLevel=PriorityMap[TaskPriorityInput],
-            Frequency="Daily",
-            TargetPet=PrimaryPet
+            Frequency="Daily", # Using Daily default for demo
+            TargetPet=PrimaryPet,
+            Time=TaskTimeInput
         )
         PrimaryPet.AddTask(NewBackendTask)
-        st.success(f"Added {TaskTitleInput} to {PrimaryPet.Name}!")
+        st.success(f"Added {TaskTitleInput} to {PrimaryPet.Name} at {TaskTimeInput}!")
     else:
         st.error("No active pet available to receive tasks.")
 
@@ -67,9 +70,12 @@ if st.button("Add task"):
 AllSystemTasks = CurrentOwner.GetAllTasks()
 
 if AllSystemTasks:
+    # Render table dynamically mapped, invoking the SortByTime function locally for clean tracking
     st.write("Current tasks:")
-    # Render table derived directly from the connected backend objects
-    RenderTableData = [{"Pet": T.TargetPet.Name, "Title": T.Description, "Duration (min)": T.Duration, "Priority": T.PriorityLevel} for T in AllSystemTasks]
+    EngineForDisplay = Scheduler(SystemOwner=CurrentOwner)
+    SortedDisplayTasks = EngineForDisplay.SortByTime(AllSystemTasks)
+    
+    RenderTableData = [{"Time": T.Time, "Pet": T.TargetPet.Name, "Title": T.Description, "Duration": T.Duration, "Priority": T.PriorityLevel} for T in SortedDisplayTasks]
     st.table(RenderTableData)
 else:
     st.info("No tasks yet. Add one above.")
@@ -85,12 +91,27 @@ if st.button("Generate schedule"):
     # Initialize "Brain" and run the plan
     Engine = Scheduler(SystemOwner=CurrentOwner)
     GeneratedPlan = Engine.GenerateSchedule()
+    SortedPlan = Engine.SortByTime(GeneratedPlan)
     
-    st.success("Schedule logic successfully executed!")
+    # Run algorithmic conflict parsing natively through Streamlit Warnings
+    Conflicts = Engine.DetectConflicts()
+    if Conflicts:
+        for Warning in Conflicts:
+            st.warning(Warning)
+    
+    st.success("Schedule logic successfully executed and chronologically sorted!")
     
     TotalTimeSpent = 0
-    for ScheduledItem in GeneratedPlan:
-        st.markdown(f"✅ **{ScheduledItem.Description}** for {ScheduledItem.TargetPet.Name} ({ScheduledItem.Duration} mins)")
-        TotalTimeSpent += ScheduledItem.Duration
+    if SortedPlan:
+        PlanData = []
+        for ScheduledItem in SortedPlan:
+            PlanData.append({
+                "Time": ScheduledItem.Time,
+                "Task": ScheduledItem.Description,
+                "For": ScheduledItem.TargetPet.Name,
+                "Duration (min)": ScheduledItem.Duration
+            })
+            TotalTimeSpent += ScheduledItem.Duration
+        st.table(PlanData)
         
     st.info(f"Total time required: {TotalTimeSpent} / {CurrentOwner.AvailableTime} minutes.")

@@ -43,27 +43,27 @@
 
 **a. How you used AI**
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
+- VS Code Copilot's *Inline Chat* and *Agent Mode* were the most effective tools for building the logic. Agent Mode easily flushed out the skeleton dependencies between `Owner` and `Pet`, whereas Inline Chat was heavily targeted for precise logic algorithms like building `SortedByTime(AllTasks)`.
+- Using separate chat sessions for different architectural phases prevented prompt saturation. Dedicating an entirely clean thread to Testing allowed Copilot to focus entirely on parsing edge cases instead of getting distracted by existing UI markup. 
 
 **b. Judgment and verification**
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
+- An AI suggestion originally proposed mathematically parsing overlapping duration collisions into the `DetectConflicts` scheduler logic (e.g., checking if Task A's 15-minute runtime collided with Task B's start block). I rejected the complex loop in favor of an O(N) exact-time map, keeping my system design functionally lighter and cleaner since pet schedules are inherently flexible check-ins rather than rigid server cycles.
+- Functioning as the "lead architect" taught me that AI operates best as an instantaneous junior developer executing your blueprint. By forcing AI components to hook exactly onto *my* explicitly designed UML architectures and evaluating them against *my* own isolated test frameworks, I dictated the overall quality of the build rather than letting the AI decide the logic constraints.
 
 ---
 
 ## 4. Testing and Verification
 
 **a. What you tested**
-
-- What behaviors did you test?
-- Why were these tests important?
+- I built a comprehensive unit suite targeting logical data array manipulation across the `Scheduler` bounds.
+- I tested **Sorting Correctness**, **Recurrence Generation**, **Conflict Detection**, **Task Addition**, and **Task Completion**.
+- These were critical because algorithmic filtering, cloning, and sorting are silent "backend" operations. If these operations fail mathematically, the Streamlit frontend would simply display fundamentally broken lists lacking priority without directly crashing, making it impossible to debug logically later.
 
 **b. Confidence**
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+- I am 5/5 highly confident in the backend infrastructure as verified natively by the `Pytest` run displaying 100% assertions passed.
+- If granted more iterations natively, I would test scaling large data limits (e.g. 5,000 tasks attached to multiple pets dynamically), testing explicit invalid HH:MM string bounds exceptions, and handling negative duration inputs intelligently inside `Scheduler`.
 
 ---
 
@@ -71,12 +71,12 @@
 
 **a. What went well**
 
-- What part of this project are you most satisfied with?
+- Transitioning from placeholder `.py` skeleton dictionaries into fully initialized modular backend instances (`Owner`, `Task`, `Scheduler`) through Python Dataclasses mapped exceptionally cleanly once connected natively inside `st.session_state`.
 
 **b. What you would improve**
 
-- If you had another iteration, what would you improve or redesign?
+- I would expand conflict detection beyond the exact lightweight start-times and into mathematical overlapping span logic scaling against the explicit duration intervals if I allocated more time to refactor.
 
 **c. Key takeaway**
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+- Building systems alongside AI requires operating actively as the Lead Architect making explicit, structural decisions independently beforehand (`UML`) instead of just asking an AI to solve an ambiguous problem natively from scratch.

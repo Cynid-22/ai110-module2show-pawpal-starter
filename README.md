@@ -2,6 +2,10 @@
 
 You are building **PawPal+**, a Streamlit app that helps a pet owner plan care tasks for their pet.
 
+## 📸 Demo
+
+<a href="/course_images/ai110/pawpal_final_ui.png" target="_blank"><img src='/course_images/ai110/pawpal_final_ui.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
+
 ## Scenario
 
 A busy pet owner needs help staying consistent with pet care. They want an assistant that can:
@@ -25,6 +29,7 @@ Your final app should:
 ## Smarter Scheduling
 
 The core PawPal+ system features advanced algorithmic handling for logistical planning:
+
 - **Time String Sorting:** The Scheduler logically zeroes and sorts HH:MM strings to guarantee chronological ascending task arrays.
 - **Status/Pet Filtering:** Dynamic array parsing filters allow isolated retrieval of tasks mapped to a specific Pet Name or completion boolean.
 - **Auto-Recurring Generations:** Utilizing `datetime.timedelta`, tasks designated as Daily or Weekly inherently instantiate identical future-dated copies of themselves when flagged as complete.
@@ -59,6 +64,7 @@ python -m pytest
 ```
 
 **Test Suite Coverage:**
+
 - **Task Addition:** Verifies adding instances accurately maps to the target pet's internal memory array.
 - **Task Completion:** Verifies state transition toggling `IsCompleted` successfully.
 - **Sorting Correctness:** Verifies alphabetical zero-padded string logic orders array items correctly across disjointed inputs.
